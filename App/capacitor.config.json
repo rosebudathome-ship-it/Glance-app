@@ -1,0 +1,31 @@
+{
+	"appId": "com.glance.app",
+	"appName": "Glance",
+	"webDir": "www",
+	"server": {
+		"url": "https://glance-at-me-app.lovable.app",
+		"cleartext": false
+	},
+	"ios": {
+		"contentInset": "always",
+		"scrollEnabled": true,
+		"limitsNavigationsToAppBoundDomains": false
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 1500,
+			"launchAutoHide": true,
+			"backgroundColor": "#ffffff",
+			"iosSpinnerStyle": "small",
+			"showSpinner": false
+		},
+		"StatusBar": {
+			"style": "DEFAULT",
+			"overlaysWebView": false
+		}
+	},
+	"packageClassList": [
+		"SplashScreenPlugin",
+		"StatusBarPlugin"
+	]
+}
