@@ -7,6 +7,7 @@ workflows:
       xcode: latest
       node: latest
       cocoapods: default
+
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.daverosenfeld.glance
@@ -18,7 +19,7 @@ workflows:
 
       - name: Build web app
         script: |
-          echo "No build step required"
+          echo "No web build required"
 
       - name: Sync Capacitor
         script: |
@@ -36,10 +37,10 @@ workflows:
       - name: Build IPA
         script: |
           xcode-project build-ipa \
-            --workspace ios/App/App.xcworkspace \
-            --scheme App
+            --workspace "ios/App/App.xcworkspace" \
+            --scheme "App" \
+            --archive-flags="-allowProvisioningUpdates"
 
     artifacts:
       - build/ios/ipa/*.ipa
-      - ios/App/build/ios/ipa/*.ipa
       - ios/App/build/**/*.ipa
