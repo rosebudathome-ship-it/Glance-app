@@ -2,30 +2,38 @@ workflows:
   ios-workflow:
     name: iOS Build
     max_build_duration: 60
-
     environment:
+      vars:
+        BUNDLE_ID: "com.daverosenfeld.glance"
       xcode: latest
       cocoapods: default
-      node: latest
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.daverosenfeld.glance
 
     scripts:
       - name: Install dependencies
         script: |
           npm install
 
+      - name: Build web app
+        script: |
+          npm run build
+
       - name: Sync Capacitor
         script: |
           npx cap sync ios
 
-      - name: Set signing and build IPA
+      - name: Set up code signing
         script: |
-          cd ios/App
           xcode-project use-profiles
-          xcode-project build-ipa --workspace App.xcworkspace --scheme App
+
+      - name: Build IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace "ios/App/App.xcworkspace" \
+            --scheme "App"
 
     artifacts:
-      - ios/App/build/ios/ipa/*.ipa
-      - ios/App/build/ipa/*.ipa
+      - build/ios/ipa/*.ipa
+
+    publishing:
+      app_store_connect:
+        api_key: Encrypted(...)
