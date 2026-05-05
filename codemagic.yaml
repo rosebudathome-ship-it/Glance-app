@@ -1,49 +1,39 @@
 workflows:
- ios-workflow:
-   name: iOS Build
-   max_build_duration: 60
+  ios-workflow:
+    name: iOS Workflow
 
-   environment:
-     xcode: latest
-     node: latest
-     cocoapods: default
-     ios_signing:
-       distribution_type: app_store
-       bundle_identifier: com.daverosenfeld.glance
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.glanceapp.app
 
-   scripts:
-     - name: Install dependencies
-       script: |
-         npm install
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install
 
-     - name: Sync Capacitor
-       script: |
-         npx cap sync ios
+      - name: Build web app
+        script: |
+          npm run build
 
-     - name: Install CocoaPods clean
-       script: |
-         cd ios/App
-         pod deintegrate
-         pod repo update
-         pod install
+      - name: Sync Capacitor
+        script: |
+          npx cap sync ios
 
-     - name: Set up code signing
-       script: |
-         xcode-project use-profiles --project ios/App/App.xcodeproj
+      - name: Install CocoaPods
+        script: |
+          cd ios/App
+          pod install
 
-     - name: Build IPA
-       script: |
-         cd ios/App
-         xcodebuild \
-           -workspace App.xcworkspace \
-           -scheme App \
-           -configuration Release \
-           -archivePath build/App.xcarchive \
-           archive \
-           CODE_SIGN_STYLE=Manual \
-           DEVELOPMENT_TEAM=GU77253GJF \
-           PROVISIONING_PROFILE_SPECIFIER="glance-appstore" \
-           CODE_SIGN_IDENTITY="Apple Distribution"
+      - name: Build IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace "ios/App/App.xcworkspace" \
+            --scheme "App"
 
-   artifacts:
-     - ios/App/build/**/*.ipa
+    artifacts:
+      - build/ios/ipa/*.ipa
+
+    publishing:
+      app_store_connect:
+        auth: integration
