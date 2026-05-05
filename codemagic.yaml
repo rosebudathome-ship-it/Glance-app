@@ -1,42 +1,49 @@
 workflows:
-  ios-workflow:
-    name: iOS Build
-    max_build_duration: 60
+ ios-workflow:
+   name: iOS Build
+   max_build_duration: 60
 
-    environment:
-      xcode: latest
-      node: latest
-      cocoapods: default
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.daverosenfeld.glance
+   environment:
+     xcode: latest
+     node: latest
+     cocoapods: default
+     ios_signing:
+       distribution_type: app_store
+       bundle_identifier: com.daverosenfeld.glance
 
-    scripts:
-      - name: Install dependencies
-        script: |
-          npm install
+   scripts:
+     - name: Install dependencies
+       script: |
+         npm install
 
-      - name: Sync Capacitor
-        script: |
-          npx cap sync ios
+     - name: Sync Capacitor
+       script: |
+         npx cap sync ios
 
-      - name: Install CocoaPods (clean)
-        script: |
-          cd ios/App
-          pod deintegrate
-          pod repo update
-          pod install
+     - name: Install CocoaPods clean
+       script: |
+         cd ios/App
+         pod deintegrate
+         pod repo update
+         pod install
 
-      - name: Set up code signing
-        script: |
-          xcode-project use-profiles --project ios/App/App.xcodeproj
+     - name: Set up code signing
+       script: |
+         xcode-project use-profiles --project ios/App/App.xcodeproj
 
-      - name: Build IPA
-        script: |
-          xcode-project build-ipa \
-            --workspace ios/App/App.xcworkspace \
-            --scheme App \
-            --archive-flags="-allowProvisioningUpdates CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=GU77253GJF PROVISIONING_PROFILE_SPECIFIER=glance-appstore CODE_SIGN_IDENTITY='Apple Distribution'"
+     - name: Build IPA
+       script: |
+         cd ios/App
+         xcodebuild \
+           -workspace App.xcworkspace \
+           -scheme App \
+           -configuration Release \
+           -archivePath build/App.xcarchive \
+           archive \
+           CODE_SIGN_STYLE=Manual \
+           DEVELOPMENT_TEAM=GU77253GJF \
+           PROVISIONING_PROFILE_SPECIFIER="glance-appstore" \
+           CODE_SIGN_IDENTITY="Apple Distribution"
 
-    artifacts:
-      - ios/App/build/**/*.ipa
+   artifacts:
+     - ios/App/build/**/*.ipa
