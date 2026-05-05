@@ -16,10 +16,6 @@ workflows:
         script: |
           npm install
 
-      - name: Build web app
-        script: |
-          echo "No build step required"
-
       - name: Sync Capacitor
         script: |
           npx cap sync ios
@@ -33,7 +29,7 @@ workflows:
           xcode-project build-ipa \
             --workspace ios/App/App.xcworkspace \
             --scheme App \
-            --archive-flags="-allowProvisioningUpdates"
+            --archive-flags="-allowProvisioningUpdates CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=GU77253GJF PROVISIONING_PROFILE_SPECIFIER=glance-appstore CODE_SIGN_IDENTITY='Apple Distribution'"
 
     artifacts:
       - build/ios/ipa/*.ipa
