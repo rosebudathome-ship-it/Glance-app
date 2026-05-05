@@ -2,11 +2,14 @@ workflows:
   ios-workflow:
     name: iOS Build
     max_build_duration: 60
+
     environment:
-      vars:
-        BUNDLE_ID: "com.daverosenfeld.glance"
       xcode: latest
+      node: latest
       cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.daverosenfeld.glance
 
     scripts:
       - name: Install dependencies
@@ -33,7 +36,4 @@ workflows:
 
     artifacts:
       - build/ios/ipa/*.ipa
-
-    publishing:
-      app_store_connect:
-        api_key: Encrypted(...)
+      - ios/App/build/ios/ipa/*.ipa
