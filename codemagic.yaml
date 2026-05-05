@@ -24,9 +24,13 @@ workflows:
         script: |
           npx cap sync ios
 
-      - name: Set up code signing
+      - name: Force automatic signing
         script: |
           xcode-project use-profiles
+          xcode-project build \
+            --workspace "ios/App/App.xcworkspace" \
+            --scheme "App" \
+            --archive-flags="-allowProvisioningUpdates"
 
       - name: Build IPA
         script: |
