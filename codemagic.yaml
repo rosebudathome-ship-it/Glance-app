@@ -7,10 +7,9 @@ workflows:
       xcode: latest
       node: latest
       cocoapods: default
-
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.daverosenfeld.glance
+        bundle_identifier: com.daverosenfeld.glance.app
 
     scripts:
       - name: Install dependencies
@@ -38,8 +37,7 @@ workflows:
         script: |
           xcode-project build-ipa \
             --workspace "ios/App/App.xcworkspace" \
-            --scheme "App" \
-            --archive-flags="-allowProvisioningUpdates"
+            --scheme "App"
 
     artifacts:
       - build/ios/ipa/*.ipa
