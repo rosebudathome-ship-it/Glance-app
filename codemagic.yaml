@@ -18,7 +18,7 @@ workflows:
 
       - name: Build web app
         script: |
-          npm run build
+          echo "No build step required"
 
       - name: Sync Capacitor
         script: |
@@ -37,3 +37,4 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - ios/App/build/ios/ipa/*.ipa
+      - ios/App/build/ipa/*.ipa
