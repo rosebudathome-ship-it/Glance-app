@@ -4,6 +4,9 @@ workflows:
     max_build_duration: 60
 
     environment:
+      xcode: latest
+      cocoapods: default
+      node: latest
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.daverosenfeld.glance
@@ -17,23 +20,12 @@ workflows:
         script: |
           npx cap sync ios
 
-      - name: Build IPA
+      - name: Set signing and build IPA
         script: |
           cd ios/App
           xcode-project use-profiles
-
-          xcodebuild archive \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath build/App.xcarchive \
-            CODE_SIGN_STYLE=Automatic
-
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist /Users/builder/export_options.plist
+          xcode-project build-ipa --workspace App.xcworkspace --scheme App
 
     artifacts:
+      - ios/App/build/ios/ipa/*.ipa
       - ios/App/build/ipa/*.ipa
