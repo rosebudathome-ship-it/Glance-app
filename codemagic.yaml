@@ -1,22 +1,38 @@
 workflows:
   ios-workflow:
     name: iOS Build
+
     environment:
       xcode: latest
       cocoapods: default
       node: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.daverosenfeld.glance
+
     scripts:
       - name: Install dependencies
         script: |
           npm install
-      - name: Build iOS
+
+      - name: Sync Capacitor
         script: |
           npx cap sync ios
+
+      - name: Build IPA
+        script: |
           cd ios/App
+          xcode-project use-profiles
           xcodebuild -workspace App.xcworkspace \
             -scheme App \
-            -sdk iphoneos \
             -configuration Release \
-            CODE_SIGNING_ALLOWED=NO
+            -archivePath build/App.xcarchive \
+            archive
+          xcode-project build-ipa \
+            --workspace App.xcworkspace \
+            --scheme App \
+            --archive-path build/App.xcarchive
+
     artifacts:
-      - ios/App/build/**/*.app
+      - ios/App/build/ios/ipa/*.ipa
+      - ios/App/build/App.xcarchive
