@@ -20,6 +20,11 @@ workflows:
         script: |
           npx cap sync ios
 
+      - name: Install CocoaPods
+        script: |
+          cd ios/App
+          pod install
+
       - name: Set up code signing
         script: |
           xcode-project use-profiles --project ios/App/App.xcodeproj
@@ -32,6 +37,4 @@ workflows:
             --archive-flags="-allowProvisioningUpdates CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=GU77253GJF PROVISIONING_PROFILE_SPECIFIER=glance-appstore CODE_SIGN_IDENTITY='Apple Distribution'"
 
     artifacts:
-      - build/ios/ipa/*.ipa
-      - ios/App/build/ios/ipa/*.ipa
-      - ios/App/build/ipa/*.ipa
+      - ios/App/build/**/*.ipa
