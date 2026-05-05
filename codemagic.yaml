@@ -1,11 +1,11 @@
 workflows:
   ios-workflow:
     name: iOS Build
-
     environment:
       xcode: latest
       cocoapods: default
       node: latest
+
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.daverosenfeld.glance
@@ -22,17 +22,11 @@ workflows:
       - name: Build IPA
         script: |
           cd ios/App
-          xcode-project use-profiles
-          xcodebuild -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -archivePath build/App.xcarchive \
-            archive
+          xcode-project use-profiles --project App.xcodeproj
           xcode-project build-ipa \
             --workspace App.xcworkspace \
             --scheme App \
-            --archive-path build/App.xcarchive
+            --archive-xcargs "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=GU77253GJF"
 
     artifacts:
       - ios/App/build/ios/ipa/*.ipa
-      - ios/App/build/App.xcarchive
