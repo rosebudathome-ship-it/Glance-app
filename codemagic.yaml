@@ -20,7 +20,7 @@ workflows:
       - name: Build IPA
         script: |
           cd ios/App
-          xcode-project use-profiles --project App.xcodeproj
+          xcode-project use-profiles
 
           xcodebuild archive \
             -workspace App.xcworkspace \
@@ -28,38 +28,12 @@ workflows:
             -configuration Release \
             -sdk iphoneos \
             -archivePath build/App.xcarchive \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM=GU77253GJF \
-            PROVISIONING_PROFILE_SPECIFIER="glance-appstore-profile"
-
-          cat > ExportOptions.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>app-store</string>
-            <key>teamID</key>
-            <string>GU77253GJF</string>
-            <key>signingStyle</key>
-            <string>manual</string>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>com.daverosenfeld.glance</key>
-              <string>glance-appstore-profile</string>
-            </dict>
-            <key>uploadBitcode</key>
-            <false/>
-            <key>compileBitcode</key>
-            <false/>
-          </dict>
-          </plist>
-          EOF
+            CODE_SIGN_STYLE=Automatic
 
           xcodebuild -exportArchive \
             -archivePath build/App.xcarchive \
             -exportPath build/ipa \
-            -exportOptionsPlist ExportOptions.plist
+            -exportOptionsPlist /Users/builder/export_options.plist
 
     artifacts:
       - ios/App/build/ipa/*.ipa
