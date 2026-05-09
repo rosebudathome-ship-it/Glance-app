@@ -4,7 +4,7 @@ workflows:
     max_build_duration: 60
 
     integrations:
-      app_store_connect: codemagic
+      app_store_connect: "code magic"
 
     environment:
       ios_signing:
@@ -40,7 +40,7 @@ workflows:
       - name: Auto increment build number
         script: |
           cd ios/App
-          agvtool new-version -all $(date +%s)
+          agvtool new-version -all $BUILD_NUMBER
 
       - name: Set up code signing
         script: |
@@ -55,7 +55,6 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
 
     publishing:
       app_store_connect:
