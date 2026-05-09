@@ -29,12 +29,12 @@ workflows:
           cd ios/App
           pod install
 
-      - name: Force build number 4
+      - name: Force build number 5
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0" ios/App/App/Info.plist || /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0" ios/App/App/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 4" ios/App/App/Info.plist || /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string 4" ios/App/App/Info.plist
-          sed -i '' 's/CURRENT_PROJECT_VERSION = 1;/CURRENT_PROJECT_VERSION = 4;/g' ios/App/App.xcodeproj/project.pbxproj
-          sed -i '' 's/CURRENT_PROJECT_VERSION = 2;/CURRENT_PROJECT_VERSION = 4;/g' ios/App/App.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 4" ios/App/App/Info.plist || /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string 5" ios/App/App/Info.plist
+          sed -i '' 's/CURRENT_PROJECT_VERSION = 1;/CURRENT_PROJECT_VERSION = 5;/g' ios/App/App.xcodeproj/project.pbxproj
+          sed -i '' 's/CURRENT_PROJECT_VERSION = 2;/CURRENT_PROJECT_VERSION = 5;/g' ios/App/App.xcodeproj/project.pbxproj
           grep -n "CURRENT_PROJECT_VERSION" ios/App/App.xcodeproj/project.pbxproj
           grep -n "CFBundleVersion" ios/App/App/Info.plist
 
