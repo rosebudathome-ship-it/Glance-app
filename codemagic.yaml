@@ -1,15 +1,11 @@
 workflows:
   ios-workflow:
     name: iOS Build
-    max_build_duration: 60
 
     environment:
-      xcode: latest
-      node: latest
-      cocoapods: default
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.daverosenfeld.glance.app
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
 
     scripts:
       - name: Install dependencies
@@ -18,7 +14,7 @@ workflows:
 
       - name: Build web app
         script: |
-          echo "No web build required"
+          npm run build
 
       - name: Sync Capacitor
         script: |
@@ -26,27 +22,22 @@ workflows:
 
       - name: Install CocoaPods
         script: |
+          cd ios/App && pod install
+
+      - name: Auto increment build number
+        script: |
           cd ios/App
-          pod install
-
-      - name: Force build number 7
-        script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0" ios/App/App/Info.plist || /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string 1.0" ios/App/App/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 7" ios/App/App/Info.plist || /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string 7" ios/App/App/Info.plist
-          sed -i '' 's/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = 7;/g' ios/App/App.xcodeproj/project.pbxproj
-          grep -n "CURRENT_PROJECT_VERSION" ios/App/App.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/App/App/Info.plist
-
-      - name: Set up code signing
-        script: |
-          xcode-project use-profiles --project ios/App/App.xcodeproj
+          agvtool next-version -all
 
       - name: Build IPA
         script: |
           xcode-project build-ipa \
-            --workspace "ios/App/App.xcworkspace" \
-            --scheme "App"
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
 
     artifacts:
       - build/ios/ipa/*.ipa
-      - ios/App/build/**/*.ipa
+
+    publishing:
+      app_store_connect:
+        auth: integration
