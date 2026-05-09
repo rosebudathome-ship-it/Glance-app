@@ -35,7 +35,7 @@ workflows:
           bun install
       - name: Build web assets
         script: |
-          bun run build
+          echo "no npm build script found; skipping web build"
       - name: Sync Capacitor iOS
         script: |
           npx cap sync ios
