@@ -3,13 +3,10 @@ workflows:
     name: iOS Build
     max_build_duration: 60
 
-    integrations:
-      app_store_connect: App Store Connect
-
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.daverosenfeld.glance.app
+        bundle_identifier: com.daverosenfeld.glance-app
 
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
@@ -40,7 +37,7 @@ workflows:
       - name: Auto increment build number
         script: |
           cd ios/App
-          agvtool next-version -all
+          agvtool new-version -all $(date +%s)
 
       - name: Set up code signing
         script: |
@@ -60,4 +57,5 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
+
 
