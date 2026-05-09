@@ -2,10 +2,20 @@ workflows:
   ios-workflow:
     name: iOS Build
 
+    max_build_duration: 60
+
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.daverosenfeld.glance.app
+
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
+
+      node: latest
+      xcode: latest
+      cocoapods: default
 
     scripts:
       - name: Install dependencies
@@ -22,7 +32,8 @@ workflows:
 
       - name: Install CocoaPods
         script: |
-          cd ios/App && pod install
+          cd ios/App
+          pod install
 
       - name: Auto increment build number
         script: |
@@ -37,7 +48,16 @@ workflows:
 
     artifacts:
       - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
 
     publishing:
       app_store_connect:
         auth: integration
+
+      email:
+        recipients:
+          - your@email.com
+        notify:
+          success: true
+          failure: true
