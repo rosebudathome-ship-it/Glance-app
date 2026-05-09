@@ -10,7 +10,7 @@ workflows:
         - app_store_credentials
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.glance.app
+        bundle_identifier: com.daverosenfeld.glance.app
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_PROJECT: "ios/App/App.xcodeproj"
