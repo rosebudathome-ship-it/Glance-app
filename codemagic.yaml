@@ -9,7 +9,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.daverosenfeld.glance-app
+        bundle_identifier: com.daverosenfeld.glance.app
 
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
