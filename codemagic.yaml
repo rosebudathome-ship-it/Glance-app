@@ -72,5 +72,5 @@ workflows:
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app.dSYM.zip
     publishing:
       app_store_connect:
-        auth: env
+        auth: integration
         submit_to_testflight: true
