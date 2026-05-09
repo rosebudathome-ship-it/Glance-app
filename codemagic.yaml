@@ -1,8 +1,10 @@
 workflows:
   ios-workflow:
     name: iOS Build
-
     max_build_duration: 60
+
+    integrations:
+      app_store_connect: App Store Connect
 
     environment:
       ios_signing:
@@ -40,6 +42,10 @@ workflows:
           cd ios/App
           agvtool next-version -all
 
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+
       - name: Build IPA
         script: |
           xcode-project build-ipa \
@@ -55,9 +61,3 @@ workflows:
       app_store_connect:
         auth: integration
 
-      email:
-        recipients:
-          - your@email.com
-        notify:
-          success: true
-          failure: true
